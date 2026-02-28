@@ -1,75 +1,519 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-// SEU ESTADO 
-$PDV_ESTADO = "CE"; // EX. SP, RN, RJ..
-
-// CONFIGURAÇÕES DO BANCO DE DADOS
 /*
-$PDV_HOST 		= "localhost"; // O HOSTNAME DO SEU SERVIDOR (33306)
-$PDV_USUARIO 	= "root"; // USUARIO DO BANCO DE DADOS
-$PDV_SENHA 		= ""; // SENHA DO BANCO DE DADOS
-$PDV_BASE 		= "sis_nfe_pdv"; // NOME DO BANCO DE DADOS
+|--------------------------------------------------------------------------
+| Base Site URL
+|--------------------------------------------------------------------------
+|
+| URL to your CodeIgniter root. Typically this will be your base URL,
+| WITH a trailing slash:
+|
+|	http://example.com/
+|
+| If this is not set then CodeIgniter will try guess the protocol, domain
+| and path to your installation. However, you should always configure this
+| explicitly and never rely on auto-guessing, especially in production
+| environments.
+|
 */
-$PDV_HOST 		= "localhost"; // O HOSTNAME DO SEU SERVIDOR
-$PDV_USUARIO 	= ""; // USUARIO DO BANCO DE DADOS
-$PDV_SENHA 		= ""; // SENHA DO BANCO DE DADOS
-$PDV_BASE 		= ""; // NOME DO BANCO DE DADOS
 
-// CONFIGURACOES DE EMAIL --- SMTP
-$mailNomeFrom = 'Suporte Meu Site';
-$mailFrom = 'github.com/gyslane26-netizen/programa.git';
-
-$mailHost = 'github.com/gyslane26-netizen/programa.git';  // Specify main and backup SMTP servers
-$mailSMTPAuth = true;                               // Enable SMTP authentication
-$mailUsername = 'github.com/gyslane26-netizen/programa.git';                 // SMTP username
-$mailPassword = 'senha';                           // SMTP password
-$mailPort = 587;                                    // TCP port to connect to
-$mailSMTPOptions = array(
-'ssl' => array(
-'verify_peer'  => false,
-'verify_peer_name' => false,
-'allow_self_signed' => false
-)
-);
-
-// CONFIGURACOES DO TECNICO RESPONSAVEL, OPCIONAL, MAS SE FOR USADO TODOS OS CAMPOS DEVEM SER PREENCHIDOS
-$tecCNPJ        = ""; //CNPJ da pessoa jurídica responsável pelo sistema utilizado na emissão do documento fiscal eletrônico
-$tecxContato    = ""; //Nome da pessoa a ser contatada
-$tecemail       = ""; //E-mail da pessoa jurídica a ser contatada
-$tecfone        = ""; //Telefone da pessoa jurídica/física a ser contatada
-$tecCSRT        = ""; //Código de Segurança do Responsável Técnico
-$tecidCSRT      = ""; //Identificador do CSRT
-
-$listaCFOPProdutosPermitidos = array(5101 => 'Venda de produção do estabelecimento', 5102 => 'Venda de mercadoria adquirida ou recebida de terceiros', 5103 => 'Venda de produção do estabelecimento, efetuada fora do estabelecimento', 5104 => 'Venda de mercadoria adquirida ou recebida de terceiros, efetuada fora do estabelecimento', 5105 => 'Venda de produção do estabelecimento que não deva por ele transitar', 5106 => 'Venda de mercadoria adquirida ou recebida de terceiros, que não deva por ele transitar', 5109 => 'Venda de produção do estabelecimento, destinada à Zona Franca de Manaus ou Áreas de Livre Comércio', 5110 => 'Venda de mercadoria adquirida ou recebida de terceiros, destinada à Zona Franca de Manaus ou Áreas de', 5111 => 'Venda de produção do estabelecimento remetida anteriormente em consignação industrial', 5112 => 'Venda de mercadoria adquirida ou recebida de terceiros remetida anteriormente em consignação industrial', 5113 => 'Venda de produção do estabelecimento remetida anteriormente em consignação mercantil', 5114 => 'Venda de mercadoria adquirida ou recebida de terceiros remetida anteriormente em consignação mercantil', 5115 => 'Venda de mercadoria adquirida ou recebida de terceiros, recebida anteriormente em consignação mercantil', 5116 => 'Venda de produção do estabelecimento originada de encomenda para entrega futura', 5117 => 'Venda de mercadoria adquirida ou recebida de terceiros, originada de encomenda para entrega futura', 5118 => 'Venda de produção do estabelecimento entregue ao destinatário por conta e ordem do adquirente originário, em venda à ordem', 5119 => 'Venda de mercadoria adquirida ou recebida de terceiros entregue ao destinatário por conta e ordem do adquirente originário, em venda à ordem', 5120 => 'Venda de mercadoria adquirida ou recebida de terceiros entregue ao destinatário pelo vendedor remetente, em venda à ordem', 5122 => 'Venda de produção do estabelecimento remetida para industrialização, por conta e ordem do adquirente, sem transitar pelo estabelecimento do adquirente', 5123 => 'Venda de mercadoria adquirida ou recebida de terceiros remetida para industrialização, por conta e ordem do adquirente, sem transitar pelo estabelecimento do adquirente', 5124 => 'Industrialização efetuada para outra empresa', 5125 => 'Industrialização efetuada para outra empresa quando a mercadoria recebida para utilização no processo de industrialização não transitar pelo estabelecimento adquirente da mercadoria', 5151 => 'Transferência de produção do estabelecimento', 5152 => 'Transferência de mercadoria adquirida ou recebida de terceiros', 5153 => 'Transferência de energia elétrica', 5155 => 'Transferência de produção do estabelecimento, que não deva por ele transitar', 5156 => 'Transferência de mercadoria adquirida ou recebida de terceiros, que não deva por ele transitar', 5201 => 'Devolução de compra para industrialização ou produção rural', 5202 => 'Devolução de compra para comercialização', 5205 => 'Anulação de valor relativo a aquisição de serviço de comunicação', 5206 => 'Anulação de valor relativo a aquisição de serviço de transporte', 5207 => 'Anulação de valor relativo à compra de energia elétrica', 5208 => 'Devolução de mercadoria recebida em transferência para industrialização ou produção rural', 5209 => 'Devolução de mercadoria recebida em transferência para comercialização', 5210 => 'Devolução de compra para utilização na prestação de serviço sujeitas ao ICMS ou ISSQN', 5251 => 'Venda de energia elétrica para distribuição ou comercialização', 5252 => 'Venda de energia elétrica para estabelecimento industrial', 5253 => 'Venda de energia elétrica para estabelecimento comercial', 5254 => 'Venda de energia elétrica para estabelecimento prestador de serviço de transporte', 5255 => 'Venda de energia elétrica para estabelecimento prestador de serviço de comunicação', 5256 => 'Venda de energia elétrica para estabelecimento de produtor rural', 5257 => 'Venda de energia elétrica para consumo por demanda contratada', 5258 => 'Venda de energia elétrica a não contribuinte', 5301 => 'Prestação de serviço de comunicação para execução de serviço da mesma natureza', 5302 => 'Prestação de serviço de comunicação a estabelecimento industrial', 5303 => 'Prestação de serviço de comunicação a estabelecimento comercial', 5304 => 'Prestação de serviço de comunicação a estabelecimento de prestador de serviço de transporte', 5305 => 'Prestação de serviço de comunicação a estabelecimento de geradora ou de distribuidora de energia elétrica', 5306 => 'Prestação de serviço de comunicação a estabelecimento de produtor rural', 5307 => 'Prestação de serviço de comunicação a não contribuinte', 5351 => 'Prestação de serviço de transporte para execução de serviço da mesma natureza', 5352 => 'Prestação de serviço de transporte a estabelecimento industrial', 5353 => 'Prestação de serviço de transporte a estabelecimento comercial', 5354 => 'Prestação de serviço de transporte a estabelecimento de prestador de serviço de comunicação', 5355 => 'Prestação de serviço de transporte a estabelecimento de geradora ou de distribuidora de energia elétrica', 5356 => 'Prestação de serviço de transporte a estabelecimento de produtor rural', 5357 => 'Prestação de serviço de transporte a não contribuinte', 5359 => 'Prestação de serviço de transporte a contribuinte ou a não contribuinte quando a mercadoria transportada está dispensada de emissão de nota fiscal', 5360 => 'Prestação de serviço de transporte a contribuinte substituto em relação ao serviço de transporte', 5401 => 'Venda de produção do estabelecimento em operação com produto sujeito ao regime de substituição tributária, na condição de contribuinte substituto', 5402 => 'Venda de produção do estabelecimento de produto sujeito ao regime de substituição tributária, em operação entre contribuintes substitutos do mesmo produto', 5403 => 'Venda de mercadoria adquirida ou recebida de terceiros em operação com mercadoria sujeita ao regime de substituição tributária, na condição de contribuinte substituto', 5405 => 'Venda de mercadoria adquirida ou recebida de terceiros em operação com mercadoria sujeita ao regime de substituição tributária, na condição de contribuinte substituído', 5408 => 'Transferência de produção do estabelecimento em operação com produto sujeito ao regime de substituição tributária', 5409 => 'Transferência de mercadoria adquirida ou recebida de terceiros em operação com mercadoria sujeita ao regime de substituição tributária', 5410 => 'Devolução de compra para industrialização ou produção rural em operação com mercadoria sujeita ao regime de substituição tributária', 5411 => 'Devolução de compra para comercialização em operação com mercadoria sujeita ao regime de substituição tributária', 5412 => 'Devolução de bem do ativo imobilizado, em operação com mercadoria sujeita ao regime de substituição tributária', 5413 => 'Devolução de mercadoria destinada ao uso ou consumo, em operação com mercadoria sujeita ao regime de substituição tributária', 5414 => 'Remessa de produção do estabelecimento para venda fora do estabelecimento em operação com produto sujeito ao regime de substituição tributária', 5415 => 'Remessa de mercadoria adquirida ou recebida de terceiros para venda fora do estabelecimento, em operação com mercadoria sujeita ao regime de substituição tributária', 5451 => 'Remessa de animal e de insumo para estabelecimento produtor', 5500 => 'REMESSAS COM FIM ESPECÍFICO DE EXPORTAÇÃO E EVENTUAIS DEVOLUÇÕES', 5501 => 'Remessa de produção do estabelecimento, com fim específico de exportação ', 5502 => 'Remessa de mercadoria adquirida ou recebida de terceiros, com fim específico de exportação', 5503 => 'Devolução de mercadoria recebida com fim específico de exportação', 5504 => 'Remessa de mercadorias para formação de lote de exportação, de produtos industrializados ou produzidos pelo próprio estabelecimento', 5505 => 'Remessa de mercadorias, adquiridas ou recebidas de terceiros, para formação de lote de exportação', 5551 => 'Venda de bem do ativo imobilizado', 5552 => 'Transferência de bem do ativo imobilizado', 5553 => 'Devolução de compra de bem para o ativo imobilizado', 5554 => 'Remessa de bem do ativo imobilizado para uso fora do estabelecimento', 5555 => 'Devolução de bem do ativo imobilizado de terceiro, recebido para uso no estabelecimento', 5556 => 'Devolução de compra de material de uso ou consumo', 5557 => 'Transferência de material de uso ou consumo', 5601 => 'Transferência de crédito de ICMS acumulado', 5602 => 'Transferência de saldo credor de ICMS para outro estabelecimento da mesma empresa, destinado à compensação de saldo devedor de ICMS', 5603 => 'Ressarcimento de ICMS retido por substituição tributária', 5605 => 'Transferência de saldo devedor de ICMS de outro estabelecimento da mesma empresa', 5606 => 'Utilização de saldo credor de ICMS para extinção por compensação de débitos fiscais', 5651 => 'Venda de combustível ou lubrificante de produção do estabelecimento destinado à industrialização subseqüente', 5652 => 'Venda de combustível ou lubrificante de produção do estabelecimento destinado à comercialização', 5653 => 'Venda de combustível ou lubrificante de produção do estabelecimento destinado a consumidor ou usuário final', 5654 => 'Venda de combustível ou lubrificante adquirido ou recebido de terceiros destinado à industrialização subseqüente', 5655 => 'Venda de combustível ou lubrificante adquirido ou recebido de terceiros destinado à comercialização', 5656 => 'Venda de combustível ou lubrificante adquirido ou recebido de terceiros destinado a consumidor ou usuário final', 5657 => 'Remessa de combustível ou lubrificante adquirido ou recebido de terceiros para venda fora do estabelecimento', 5658 => 'Transferência de combustível ou lubrificante de produção do estabelecimento', 5659 => 'Transferência de combustível ou lubrificante adquirido ou recebido de terceiro', 5660 => 'Devolução de compra de combustível ou lubrificante adquirido para industrialização subseqüente', 5661 => 'Devolução de compra de combustível ou lubrificante adquirido para comercialização', 5662 => 'Devolução de compra de combustível ou lubrificante adquirido por consumidor ou usuário final', 5663 => 'Remessa para armazenagem de combustível ou lubrificante', 5664 => 'Retorno de combustível ou lubrificante recebido para armazenagem', 5665 => 'Retorno simbólico de combustível ou lubrificante recebido para armazenagem', 5666 => 'Remessa por conta e ordem de terceiros de combustível ou lubrificante recebido para armazenagem', 5901 => 'Remessa para industrialização por encomenda', 5902 => 'Retorno de mercadoria utilizada na industrialização por encomenda', 5903 => 'Retorno de mercadoria recebida para industrialização e não aplicada no referido processo', 5904 => 'Remessa para venda fora do estabelecimento', 5905 => 'Remessa para depósito fechado ou armazém geral', 5906 => 'Retorno de mercadoria depositada em depósito fechado ou armazém geral', 5907 => 'Retorno simbólico de mercadoria depositada em depósito fechado ou armazém geral', 5908 => 'Remessa de bem por conta de contrato de comodato', 5909 => 'Retorno de bem recebido por conta de contrato de comodato', 5910 => 'Remessa em bonificação, doação ou brinde', 5911 => 'Remessa de amostra grátis', 5912 => 'Remessa de mercadoria ou bem para demonstração', 5913 => 'Retorno de mercadoria ou bem recebido para demonstração', 5914 => 'Remessa de mercadoria ou bem para exposição ou feira', 5915 => 'Remessa de mercadoria ou bem para conserto ou reparo', 5916 => 'Retorno de mercadoria ou bem recebido para conserto ou reparo', 5917 => 'Remessa de mercadoria em consignação mercantil ou industrial', 5918 => 'Devolução de mercadoria recebida em consignação mercantil ou industrial ', 5919 => 'Devolução simbólica de mercadoria vendida ou utilizada em processo industrial, recebida anteriormente em consignação mercantil ou industrial', 5920 => 'Remessa de vasilhame ou sacaria', 5921 => 'Devolução de vasilhame ou sacaria', 5922 => 'Lançamento efetuado a título de simples faturamento decorrente de venda para entrega futura', 5923 => 'Remessa de mercadoria por conta e ordem de terceiros, em venda à ordem', 5924 => 'Remessa para industrialização por conta e ordem do adquirente da mercadoria, quando esta não transitar pelo estabelecimento do adquirente', 5925 => 'Retorno de mercadoria recebida para industrialização por conta e ordem do adquirente da mercadoria, quando aquela não transitar pelo estabelecimento do adquirente', 5926 => 'Lançamento efetuado a título de reclassificação de mercadoria decorrente de formação de kit ou de sua desagregação', 5927 => 'Lançamento efetuado a título de baixa de estoque decorrente de perda, roubo ou deterioração', 5928 => 'Lançamento efetuado a título de baixa de estoque decorrente do encerramento da atividade da empresa', 5929 => 'Lançamento efetuado em decorrência de emissão de documento fiscal relativo a operação ou prestação também registrada em equipamento Emissor de Cupom Fiscal - ECF', 5931 => 'Lançamento efetuado em decorrência da responsabilidade de retenção do imposto por substituição tributária, atribuída ao remetente ou alienante da mercadoria, pelo serviço de transporte realizado por transportador autônomo ou por transportador não inscrito na unidade da Federação onde iniciado o serviço', 5932 => 'Prestação de serviço de transporte iniciada em unidade da Federação diversa daquela onde inscrito o prestador', 5933 => 'Prestação de serviço tributado pelo ISSQN', 5949 => 'Outra saída de mercadoria ou prestação de serviço não especificado');
-
-$listaCFOPPRODUTOS = array("" => "Selecione");
-$listaCFOPNF = array();
-$listaCFOPNF["Venda de produtos"] = "VENDA DE PRODUTOS (Saída)";
-$listaCFOPNF["Prestação de Serviços"] = "PRESTAÇÃO DE SERVIÇOS (Saída)";
-$listaCFOPNF["Venda e Prestação de Serviços"] = "VENDA E PRESTAÇÃO DE SERVIÇOS (Saída)";
-$listaCFOPNF["saidas"] = " ------- Saídas -------";
-foreach($listaCFOPProdutosPermitidos as $cf_k => $cf_v){
-	$listaCFOPNF[$cf_k."/".mb_strtoupper($cf_v)] = $cf_k." - ".mb_strtoupper($cf_v);
-    $listaCFOPPRODUTOS[$cf_k] = $cf_k." - ". mb_strtoupper($cf_v);
+function getBaseUrl() 
+{
+    $currentPath = $_SERVER['PHP_SELF']; 
+    $pathInfo = pathinfo($currentPath); 
+    $hostName = $_SERVER['HTTP_HOST']; 
+    if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on'){
+        $link = "https"; 
+    } else {
+        $link = "http"; 
+    }
+    $protocol = $link."://";
+    
+   return "https://seusite.com.br/sistema";
+    
 }
-$listaCFOPNF["entradas"] = " ------- Entradas -------";
-$listaCFOPNF["1101/COMPRA PARA INDUSTRIALIZACAO"] = "1101 - COMPRA PARA INDUSTRIALIZACAO";
-$listaCFOPNF["1102/COMPRA PARA COMERCIALIZACAO"] = "1102 - COMPRA PARA COMERCIALIZACAO";
-$listaCFOPNF["1201/DEVOLUÇÃO DE VENDA DE PRODUÇÃO DO ESTABELECIMENTO"] = "1201 - DEVOLUÇÃO DE VENDA DE PRODUÇÃO DO ESTABELECIMENTO"; 
-$listaCFOPNF["1202/DEVOLUÇÃO DE VENDA DE MERCADORIA ADQUIRIDA OU RECEBIDA DE TERCEIROS"] = "1202 - DEVOLUÇÃO DE VENDA DE MERCADORIA ADQUIRIDA OU RECEBIDA DE TERCEIROS";
-$listaCFOPNF["1407/COMPRA DE MERCADORIA PARA USO OU CONSUMO CUJA MERCADORIA ESTÁ SUJEITA AO REGIME DE ST"] = "1407 - COMPRA DE MERCADORIA PARA USO OU CONSUMO CUJA MERCADORIA ESTÁ SUJEITA AO REGIME DE ST";
-$listaCFOPNF["1411/DEVOLUCAO DE MERC PARA COMERCIALIZACAO C ST"] = "1411 - DEVOLUCAO DE MERC PARA COMERCIALIZACAO C ST"; 
-$listaCFOPNF["1551/IMPORTACAO-COMPRA PARA ATIVO IMOBILIZADO"] = "3551 - COMPRA PARA ATIVO IMOBILIZADO";
-$listaCFOPNF["1556/COMPRA DE MATERIAL PARA USO OU CONSUMO"] = "1556 - COMPRA DE MATERIAL PARA USO OU CONSUMO";
-$listaCFOPNF["1904/RETORNO DE REMESSA PARA VENDA FORA DO ESTABELECIMENTO"] = "1904 - RETORNO DE REMESSA PARA VENDA FORA DO ESTABELECIMENTO";
-$listaCFOPNF["1914/RETORNO DE MERCADORIA OU BEM REMETIDO PARA EXPOSIÇÃO OU FEIRA"] = "1914 - RETORNO DE MERCADORIA OU BEM REMETIDO PARA EXPOSIÇÃO OU FEIRA";
-$listaCFOPNF["1910/ENTRADA DE BONIFICACAO, DOACAO OU BRINDE"] = "1910 - ENTRADA DE BONIFICACAO, DOACAO OU BRINDE";
-$listaCFOPNF["1915/ENTRADA DE MERCADORIA OU BEM RECEBIDO PARA CONSERTO OU REPARO"] = "1915 - ENTRADA DE MERCADORIA OU BEM RECEBIDO PARA CONSERTO OU REPARO";
-$listaCFOPNF["1916/RETORNO DE MERCADORIA OU BEM REMETIDO PARA CONSERTO OU REPARO"] = "1916 - RETORNO DE MERCADORIA OU BEM REMETIDO PARA CONSERTO OU REPARO";
-$listaCFOPNF["1919/DEVOLUCAO SIMBOLICA DE MERC RECEBIDA EM CONSIGNACAO"] = "1919 - DEVOLUCAO SIMBOLICA DE MERC RECEBIDA EM CONSIGNACAO";
-$listaCFOPNF["1920/ENTRADA DE VASILHAME OU SACARIA"] = "1920 - ENTRADA DE VASILHAME OU SACARIA";
-$listaCFOPNF["1949/OUTRA ENTRADA DE MERCADORIA OU PRESTAÇÃO DE SERVIÇO NÃO ESPECIFICADO"] = "1949 - OUTRA ENTRADA DE MERCADORIA OU PRESTAÇÃO DE SERVIÇO NÃO ESPECIFICADO";
+
+$config['base_url'] = getBaseUrl();
+define("APINFE_URL_BASE", getBaseUrl()."api-nfe/");
+define("PDV_URL_BASE", getBaseUrl());
+
+/*
+|--------------------------------------------------------------------------
+| Index File
+|--------------------------------------------------------------------------
+|
+| Typically this will be your index.php file, unless you've renamed it to
+| something else. If you are using mod_rewrite to remove the page set this
+| variable so that it is blank.
+|
+*/
+$config['index_page'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| URI PROTOCOL
+|--------------------------------------------------------------------------
+|
+| This item determines which server global should be used to retrieve the
+| URI string.  The default setting of 'REQUEST_URI' works for most servers.
+| If your links do not seem to work, try one of the other delicious flavors:
+|
+| 'REQUEST_URI'    Uses $_SERVER['REQUEST_URI']
+| 'QUERY_STRING'   Uses $_SERVER['QUERY_STRING']
+| 'PATH_INFO'      Uses $_SERVER['PATH_INFO']
+|
+| WARNING: If you set this to 'PATH_INFO', URIs will always be URL-decoded!
+*/
+$config['uri_protocol']	= 'REQUEST_URI';
+
+/*
+|--------------------------------------------------------------------------
+| URL suffix
+|--------------------------------------------------------------------------
+|
+| This option allows you to add a suffix to all URLs generated by CodeIgniter.
+| For more information please see the user guide:
+|
+| http://codeigniter.com/user_guide/general/urls.html
+*/
+
+$config['url_suffix'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| Default Language
+|--------------------------------------------------------------------------
+|
+| This determines which set of language files should be used. Make sure
+| there is an available translation if you intend to use something other
+| than english.
+|
+*/
+$config['language']	= 'portuguese-brazilian';
+
+/*
+|--------------------------------------------------------------------------
+| Default Character Set
+|--------------------------------------------------------------------------
+|
+| This determines which character set is used by default in various methods
+| that require a character set to be provided.
+|
+| See http://php.net/htmlspecialchars for a list of supported charsets.
+|
+*/
+$config['charset'] = 'UTF-8';
+
+/*
+|--------------------------------------------------------------------------
+| Enable/Disable System Hooks
+|--------------------------------------------------------------------------
+|
+| If you would like to use the 'hooks' feature you must enable it by
+| setting this variable to TRUE (boolean).  See the user guide for details.
+|
+*/
+$config['enable_hooks'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| Class Extension Prefix
+|--------------------------------------------------------------------------
+|
+| This item allows you to set the filename/classname prefix when extending
+| native libraries.  For more information please see the user guide:
+|
+| http://codeigniter.com/user_guide/general/core_classes.html
+| http://codeigniter.com/user_guide/general/creating_libraries.html
+|
+*/
+$config['subclass_prefix'] = 'MY_';
+
+/*
+|--------------------------------------------------------------------------
+| Composer auto-loading
+|--------------------------------------------------------------------------
+|
+| Enabling this setting will tell CodeIgniter to look for a Composer
+| package auto-loader script in application/vendor/autoload.php.
+|
+|	$config['composer_autoload'] = TRUE;
+|
+| Or if you have your vendor/ directory located somewhere else, you
+| can opt to set a specific path as well:
+|
+|	$config['composer_autoload'] = '/path/to/vendor/autoload.php';
+|
+| For more information about Composer, please visit http://getcomposer.org/
+|
+| Note: This will NOT disable or override the CodeIgniter-specific
+|	autoloading (application/config/autoload.php)
+*/
+$config['composer_autoload'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| Allowed URL Characters
+|--------------------------------------------------------------------------
+|
+| This lets you specify which characters are permitted within your URLs.
+| When someone tries to submit a URL with disallowed characters they will
+| get a warning message.
+|
+| As a security measure you are STRONGLY encouraged to restrict URLs to
+| as few characters as possible.  By default only these are allowed: a-z 0-9~%.:_-
+|
+| Leave blank to allow all characters -- but only if you are insane.
+|
+| The configured value is actually a regular expression character group
+| and it will be executed as: ! preg_match('/^[<permitted_uri_chars>]+$/i
+|
+| DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
+|
+*/
+$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
 
 
+/*
+|--------------------------------------------------------------------------
+| Enable Query Strings
+|--------------------------------------------------------------------------
+|
+| By default CodeIgniter uses search-engine friendly segment based URLs:
+| example.com/who/what/where/
+|
+| By default CodeIgniter enables access to the $_GET array.  If for some
+| reason you would like to disable it, set 'allow_get_array' to FALSE.
+|
+| You can optionally enable standard query string based URLs:
+| example.com?who=me&what=something&where=here
+|
+| Options are: TRUE or FALSE (boolean)
+|
+| The other items let you set the query string 'words' that will
+| invoke your controllers and its functions:
+| example.com/index.php?c=controller&m=function
+|
+| Please note that some of the helpers won't work as expected when
+| this feature is enabled, since CodeIgniter is designed primarily to
+| use segment based URLs.
+|
+*/
+$config['allow_get_array'] = TRUE;
+$config['enable_query_strings'] = FALSE;
+$config['controller_trigger'] = 'c';
+$config['function_trigger'] = 'm';
+$config['directory_trigger'] = 'd';
+
+/*
+|--------------------------------------------------------------------------
+| Error Logging Threshold
+|--------------------------------------------------------------------------
+|
+| If you have enabled error logging, you can set an error threshold to
+| determine what gets logged. Threshold options are:
+| You can enable error logging by setting a threshold over zero. The
+| threshold determines what gets logged. Threshold options are:
+|
+|	0 = Disables logging, Error logging TURNED OFF
+|	1 = Error Messages (including PHP errors)
+|	2 = Debug Messages
+|	3 = Informational Messages
+|	4 = All Messages
+|
+| You can also pass an array with threshold levels to show individual error types
+|
+| 	array(2) = Debug Messages, without Error Messages
+|
+| For a live site you'll usually only enable Errors (1) to be logged otherwise
+| your log files will fill up very fast.
+|
+*/
+$config['log_threshold'] = 0;
+
+/*
+|--------------------------------------------------------------------------
+| Error Logging Directory Path
+|--------------------------------------------------------------------------
+|
+| Leave this BLANK unless you would like to set something other than the default
+| application/logs/ directory. Use a full server path with trailing slash.
+|
+*/
+$config['log_path'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| Log File Extension
+|--------------------------------------------------------------------------
+|
+| The default filename extension for log files. The default 'php' allows for
+| protecting the log files via basic scripting, when they are to be stored
+| under a publicly accessible directory.
+|
+| Note: Leaving it blank will default to 'php'.
+|
+*/
+$config['log_file_extension'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| Log File Permissions
+|--------------------------------------------------------------------------
+|
+| The file system permissions to be applied on newly created log files.
+|
+| IMPORTANT: This MUST be an integer (no quotes) and you MUST use octal
+|            integer notation (i.e. 0700, 0644, etc.)
+*/
+$config['log_file_permissions'] = 0644;
+
+/*
+|--------------------------------------------------------------------------
+| Date Format for Logs
+|--------------------------------------------------------------------------
+|
+| Each item that is logged has an associated date. You can use PHP date
+| codes to set your own date formatting
+|
+*/
+$config['log_date_format'] = 'Y-m-d H:i:s';
+
+/*
+|--------------------------------------------------------------------------
+| Error Views Directory Path
+|--------------------------------------------------------------------------
+|
+| Leave this BLANK unless you would like to set something other than the default
+| application/views/errors/ directory.  Use a full server path with trailing slash.
+|
+*/
+$config['error_views_path'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| Cache Directory Path
+|--------------------------------------------------------------------------
+|
+| Leave this BLANK unless you would like to set something other than the default
+| application/cache/ directory.  Use a full server path with trailing slash.
+|
+*/
+$config['cache_path'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| Cache Include Query String
+|--------------------------------------------------------------------------
+|
+| Set this to TRUE if you want to use different cache files depending on the
+| URL query string.  Please be aware this might result in numerous cache files.
+|
+*/
+$config['cache_query_string'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| Encryption Key
+|--------------------------------------------------------------------------
+|
+| If you use the Encryption class, you must set an encryption key.
+| See the user guide for more info.
+|
+| http://codeigniter.com/user_guide/libraries/encryption.html
+|
+*/
+$config['encryption_key'] = 'gKyphzAP6EqVDQZt3RYBHSxfvGds7MTo159nj';
+
+/*
+|--------------------------------------------------------------------------
+| Session Variables
+|--------------------------------------------------------------------------
+|
+| 'sess_driver'
+|
+|	The storage driver to use: files, database, redis, memcached
+|
+| 'sess_cookie_name'
+|
+|	The session cookie name, must contain only [0-9a-z_-] characters
+|
+| 'sess_expiration'
+|
+|	The number of SECONDS you want the session to last.
+|	Setting to 0 (zero) means expire when the browser is closed.
+|
+| 'sess_save_path'
+|
+|	The location to save sessions to, driver dependant.
+|
+|	For the 'files' driver, it's a path to a writable directory.
+|	WARNING: Only absolute paths are supported!
+|
+|	For the 'database' driver, it's a table name.
+|	Please read up the manual for the format with other session drivers.
+|
+|	IMPORTANT: You are REQUIRED to set a valid save path!
+|
+| 'sess_match_ip'
+|
+|	Whether to match the user's IP address when reading the session data.
+|
+| 'sess_time_to_update'
+|
+|	How many seconds between CI regenerating the session ID.
+|
+| 'sess_regenerate_destroy'
+|
+|	Whether to destroy session data associated with the old session ID
+|	when auto-regenerating the session ID. When set to FALSE, the data
+|	will be later deleted by the garbage collector.
+|
+| Other session cookie settings are shared with the rest of the application,
+| except for 'cookie_prefix' and 'cookie_httponly', which are ignored here.
+|
+*/
+$config['sess_driver'] = 'database';
+$config['sess_cookie_name'] = 'spos_session';
+$config['sess_expiration'] = 7200;
+$config['sess_save_path'] = 'sessions';
+$config['sess_match_ip'] = FALSE;
+$config['sess_time_to_update'] = 300;
+$config['sess_regenerate_destroy'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| Cookie Related Variables
+|--------------------------------------------------------------------------
+|
+| 'cookie_prefix'   = Set a cookie name prefix if you need to avoid collisions
+| 'cookie_domain'   = Set to .your-domain.com for site-wide cookies
+| 'cookie_path'     = Typically will be a forward slash
+| 'cookie_secure'   = Cookie will only be set if a secure HTTPS connection exists.
+| 'cookie_httponly' = Cookie will only be accessible via HTTP(S) (no javascript)
+|
+| Note: These settings (with the exception of 'cookie_prefix' and
+|       'cookie_httponly') will also affect sessions.
+|
+*/
+$config['cookie_prefix']	= 'spos_';
+$config['cookie_domain']	= '';
+$config['cookie_path']		= '/';
+$config['cookie_secure']	= FALSE;
+$config['cookie_httponly'] 	= FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| Standardize newlines
+|--------------------------------------------------------------------------
+|
+| Determines whether to standardize newline characters in input data,
+| meaning to replace \r\n, \r, \n occurences with the PHP_EOL value.
+|
+| This is particularly useful for portability between UNIX-based OSes,
+| (usually \n) and Windows (\r\n).
+|
+*/
+$config['standardize_newlines'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| Global XSS Filtering
+|--------------------------------------------------------------------------
+|
+| Determines whether the XSS filter is always active when GET, POST or
+| COOKIE data is encountered
+|
+| WARNING: This feature is DEPRECATED and currently available only
+|          for backwards compatibility purposes!
+|
+*/
+$config['global_xss_filtering'] = TRUE;
+
+/*
+|--------------------------------------------------------------------------
+| Cross Site Request Forgery
+|--------------------------------------------------------------------------
+| Enables a CSRF cookie token to be set. When set to TRUE, token will be
+| checked on a submitted form. If you are accepting user data, it is strongly
+| recommended CSRF protection be enabled.
+|
+| 'csrf_token_name' = The token name
+| 'csrf_cookie_name' = The cookie name
+| 'csrf_expire' = The number in seconds the token should expire.
+| 'csrf_regenerate' = Regenerate token on every submission
+| 'csrf_exclude_uris' = Array of URIs which ignore CSRF checks
+*/
+$config['csrf_protection'] = TRUE;
+$config['csrf_token_name'] = 'spos_token';
+$config['csrf_cookie_name'] = 'spos_cookie';
+$config['csrf_expire'] = 7200;
+$config['csrf_regenerate'] = FALSE;
+$config['csrf_exclude_uris'] = array();
+
+/*
+|--------------------------------------------------------------------------
+| Output Compression
+|--------------------------------------------------------------------------
+|
+| Enables Gzip output compression for faster page loads.  When enabled,
+| the output class will test whether your server supports Gzip.
+| Even if it does, however, not all browsers support compression
+| so enable only if you are reasonably sure your visitors can handle it.
+|
+| Only used if zlib.output_compression is turned off in your php.ini.
+| Please do not use it together with httpd-level output compression.
+|
+| VERY IMPORTANT:  If you are getting a blank page when compression is enabled it
+| means you are prematurely outputting something to your browser. It could
+| even be a line of whitespace at the end of one of your scripts.  For
+| compression to work, nothing can be sent before the output buffer is called
+| by the output class.  Do not 'echo' any values with compression enabled.
+|
+*/
+$config['compress_output'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| Master Time Reference
+|--------------------------------------------------------------------------
+|
+| Options are 'local' or any PHP supported timezone. This preference tells
+| the system whether to use your server's local time as the master 'now'
+| reference, or convert it to the configured one timezone. See the 'date
+| helper' page of the user guide for information regarding date handling.
+|
+*/
+$config['time_reference'] = 'local';
+
+/*
+|--------------------------------------------------------------------------
+| Rewrite PHP Short Tags
+|--------------------------------------------------------------------------
+|
+| If your PHP installation does not have short tag support enabled CI
+| can rewrite the tags on-the-fly, enabling you to utilize that syntax
+| in your view files.  Options are TRUE or FALSE (boolean)
+|
+*/
+$config['rewrite_short_tags'] = TRUE;
 
 
+/*
+|--------------------------------------------------------------------------
+| Reverse Proxy IPs
+|--------------------------------------------------------------------------
+|
+| If your server is behind a reverse proxy, you must whitelist the proxy
+| IP addresses from which CodeIgniter should trust headers such as
+| HTTP_X_FORWARDED_FOR and HTTP_CLIENT_IP in order to properly identify
+| the visitor's IP address.
+|
+| You can use both an array or a comma-separated list of proxy addresses,
+| as well as specifying whole subnets. Here are a few examples:
+|
+| Comma-separated:	'10.0.1.200,192.168.5.0/24'
+| Array:		array('10.0.1.200', '192.168.5.0/24')
+*/
+$config['proxy_ips'] = '';
