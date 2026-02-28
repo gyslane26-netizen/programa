@@ -17,11 +17,11 @@ $PDV_BASE 		= ""; // NOME DO BANCO DE DADOS
 
 // CONFIGURACOES DE EMAIL --- SMTP
 $mailNomeFrom = 'Suporte Meu Site';
-$mailFrom = 'https://github.com/gyslane26-netizen/programa.git';
+$mailFrom = 'github.com/gyslane26-netizen/programa.git';
 
-$mailHost = 'https://github.com/gyslane26-netizen/programa.git';  // Specify main and backup SMTP servers
+$mailHost = 'github.com/gyslane26-netizen/programa.git';  // Specify main and backup SMTP servers
 $mailSMTPAuth = true;                               // Enable SMTP authentication
-$mailUsername = 'https://github.com/gyslane26-netizen/programa.git';                 // SMTP username
+$mailUsername = 'github.com/gyslane26-netizen/programa.git';                 // SMTP username
 $mailPassword = 'senha';                           // SMTP password
 $mailPort = 587;                                    // TCP port to connect to
 $mailSMTPOptions = array(
@@ -69,6 +69,7 @@ $listaCFOPNF["1916/RETORNO DE MERCADORIA OU BEM REMETIDO PARA CONSERTO OU REPARO
 $listaCFOPNF["1919/DEVOLUCAO SIMBOLICA DE MERC RECEBIDA EM CONSIGNACAO"] = "1919 - DEVOLUCAO SIMBOLICA DE MERC RECEBIDA EM CONSIGNACAO";
 $listaCFOPNF["1920/ENTRADA DE VASILHAME OU SACARIA"] = "1920 - ENTRADA DE VASILHAME OU SACARIA";
 $listaCFOPNF["1949/OUTRA ENTRADA DE MERCADORIA OU PRESTAÇÃO DE SERVIÇO NÃO ESPECIFICADO"] = "1949 - OUTRA ENTRADA DE MERCADORIA OU PRESTAÇÃO DE SERVIÇO NÃO ESPECIFICADO";
+
 
 
 
